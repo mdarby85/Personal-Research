@@ -16,6 +16,7 @@ __ _
   - [4.2 Nuitka](#42-nuitka)
   - [4.3 Pyarmor with Nuitka](#43-pyarmor-with-nuitka)
   - [4.5 Cython](#45-cython)
+  - [4.6 Pyarmor With Cython](#46-pyarmor-with-cython)
 - [5. Galaxy Brain Approach](#5-galaxy-brain-approach)
 
 # 1. Background
@@ -262,11 +263,27 @@ Then run the program with the following flags:
 
 **Pros**
 
-- Same as Nuitka when used for this purpose. We can compile our `.py` files into a binary executable that is relatively difficult to reverse engineer.
+- Cython compiles the python files given to it into a `.so` shared library which can be called the exact same as a normal python module/package.
+
+- Provides a decent layer of protection to source code.
 
 **Cons**
 
 - Difficult to debug. While the documentation does provide a method to debug using an included tool called `cygdb`, it is difficult to setup even by the developer's own admission.
+
+- Requires some type of entry script that is not compiled with Cython. Whether that be the main that already exists or another python script that simply calls main, there must be some script that is the entry into the project.
+
+## 4.6 Pyarmor With Cython
+
+**Pros**
+
+- Similar to Pyarmor + Nuitka minus the fact that Cython does not compile into an executable. You get the advantage of your python code compiled to C in a shared library with the added bonus of knowing your source code is obfuscated.
+
+**Cons**
+
+- Again, debugging is an issue. Even with debug symbols unstripped, there is no easy way to debug with common debuggers.
+
+- Using pdb to debug the example project and starting in `main.py`, pdb would not enter the `.so` shared object that contains the functions in `math_funcs/math_funcs.py` being called. It seems that `pdb` is not capable of debugging anything besides standard python code.
 
 # 5. Galaxy Brain Approach
 
